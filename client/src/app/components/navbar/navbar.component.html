@@ -1,0 +1,137 @@
+<!-- #region(collapsed) OLD Code -->
+
+<!-- Part 1: Show email only -->
+<!-- <mat-toolbar color="primary">
+    <section class="left">
+        <a routerLink="/" class="brand">
+            <mat-icon>eco</mat-icon>
+            Match Finder
+        </a>
+    </section>
+    <section class="right">
+        <p *ngIf="user">{{user.email}}</p>
+    </section>
+</mat-toolbar> -->
+
+
+<!-- Part 2: Show Logout instead of email-->
+<!-- 
+<mat-toolbar color="primary">
+    <section class="left">
+        <a routerLink="/" class="brand">
+            <mat-icon>eco</mat-icon>
+            Match Finder
+        </a>
+    </section>
+    <section class="right">
+        <div *ngIf="user; else loginRegisterSection">
+            <button (click)="logout()" mat-raised-button color="warn">Logout</button>
+        </div>
+        <ng-template #loginRegisterSection>
+            <button routerLink="register" mat-raised-button color="accent">Register</button>
+            <button routerLink="login" mat-raised-button color="accent">Login</button>
+        </ng-template>
+    </section>
+</mat-toolbar> -->
+
+
+<!-- Part 3:  Show menu and place Login inside it-->
+<!-- #endregion -->
+
+<mat-toolbar color="primary">
+    <section class="left">
+        <a routerLink="/" class="brand">
+            <mat-icon>eco</mat-icon>
+            Match Finder
+        </a>
+        <!-- #region NavLinks -->
+        @if(loggedInUserSig && loggedInUserSig()) {
+        <nav mat-tab-nav-bar [backgroundColor]="'primary'" [color]="'accent'" [tabPanel]="tabPanel">
+
+            @if(loggedInUserSig()?.roles?.includes('admin')) {
+            @for (link of linksWithAdmin; track $index) {
+            <a mat-tab-link [routerLink]="['/' + link]" routerLinkActive #rla="routerLinkActive"
+                [active]="rla.isActive">
+                {{link | titlecase}}
+            </a>
+            }
+            }
+            @else {
+            @for (link of links; track $index) {
+            <a mat-tab-link [routerLink]="['/' + link]" routerLinkActive #rla="routerLinkActive"
+                [active]="rla.isActive">
+                {{link | titlecase}}
+            </a>
+            }
+            }
+        </nav>
+        }
+        <mat-tab-nav-panel #tabPanel></mat-tab-nav-panel>
+        <!-- #endregion -->
+    </section>
+    <section class="right">
+        <!-- if logged-in: show appMenu
+            else: show signup/login -->
+        @if (loggedInUserSig && loggedInUserSig(); as user) {
+        <button [mat-menu-trigger-for]="appMenu" class="menu-button" mat-mini-fab>
+            <!-- <span>{{user.knownAs[0] | titlecase}}</span> Use span to not have padding/margin -->
+            @if(user.profilePhotoUrl) {
+            <img class="top-avatar" mat-card-avatar ngSrc="{{photoUrl + user.profilePhotoUrl}}" fill priority
+                alt="{{user.knownAs[0]}}">
+            <!-- // localhost:5000/storage/photo/sldkfjlsj92374.web -->
+            }
+            @else {
+            {{user.knownAs[0] | titlecase}}
+            }
+        </button>
+        }
+        @else {
+        <button routerLink="account/register" mat-raised-button color="accent">Register</button>
+        <button routerLink="account/login" mat-raised-button color="accent">Login</button>
+        }
+
+        <mat-menu #appMenu [class]="'mat-menu'">
+            <!-- profile -->
+            @if (loggedInUserSig && loggedInUserSig(); as user) {
+            <div class="user-info">
+                <div class="profile-image">
+                    <p>
+                        {{user.knownAs[0] | titlecase}}
+                    </p>
+                </div>
+                <div>
+                    <p>{{user.knownAs}}</p>
+                    <p class="email">{{user.email}}</p>
+                </div>
+            </div>
+            }
+            <!-- navigation -->
+            <mat-divider></mat-divider>
+            <mat-list>
+                <mat-list-item [routerLink]="['user/user-edit']" routerLinkActive="router-link-active">
+                    <div class="menu-items">
+                        <mat-icon>edit_note</mat-icon>
+                        Edit Profile
+                    </div>
+                </mat-list-item>
+                <mat-list-item [routerLink]="['members']" routerLinkActive="router-link-active">
+                    <div class="menu-items">
+                        <mat-icon>flaky</mat-icon>
+                        All Members
+                    </div>
+                </mat-list-item>
+                <mat-list-item [routerLink]="['messages']" routerLinkActive="router-link-active">
+                    <div class="menu-items">
+                        <mat-icon>assignment_returned</mat-icon>
+                        Messages
+                    </div>
+                </mat-list-item>
+            </mat-list>
+
+            <mat-divider></mat-divider>
+            <div class="logout">
+                <button mat-raised-button (click)="logout()">Logout</button>
+            </div>
+        </mat-menu>
+    </section>
+</mat-toolbar>

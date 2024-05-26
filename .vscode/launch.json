@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "requireExactSource": false
+        },        
+        {
+            "name": "Angular Client",
+            "request": "launch",
+            "type": "chrome",
+            "url": "https://localhost:4200/",
+            "webRoot": "${workspaceFolder}/client",
+        }
+    ]
+}

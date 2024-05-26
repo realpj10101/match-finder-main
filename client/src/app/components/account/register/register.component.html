@@ -1,0 +1,142 @@
+<form [formGroup]="registerFg" (ngSubmit)="registerFg.valid && register()">
+  <div class="content">
+    <h1>Create Account</h1>
+
+    <!-- Gender -->
+    <div class="gender">
+      <strong>I am a</strong>
+      <mat-radio-group formControlName="genderCtrl" aria-label="Select your gender" color="primary">
+        <mat-radio-button value="female">Female</mat-radio-button>
+        <mat-radio-button value="male">Male</mat-radio-button>
+        <mat-radio-button value="other">Other</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input autoFocusDir type="email" formControlName="emailCtrl" label="Email" placeHolder="Your email" matInput>
+      <mat-hint>Enter a your email.</mat-hint>
+      @if (EmailCtrl.hasError('required')) {
+      <mat-error>This field is required.</mat-error>
+      }
+      @else if (EmailCtrl.hasError('pattern')) {
+      <mat-error>Enter a valid email.</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- UserName -->
+    <mat-form-field appearance="outline">
+      <mat-label>Username</mat-label>
+      <input type="text" formControlName="userNameCtrl" label="Username" placeHolder="Your username"
+        matInput>
+      <mat-hint>Between 1 to 30 characters.</mat-hint>
+      @if (EmailCtrl.hasError('required')) {
+      <mat-error>This field is required.</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Password -->
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input type="password" formControlName="passwordCtrl" label="Password" placeHolder="Your password" matInput>
+      @if (PasswordCtrl.hasError('required')) {
+      <mat-error>This field is required.</mat-error>
+      }
+      @else if (PasswordCtrl.errors && PasswordCtrl.hasError('minlength')) {
+      <mat-error>It's too short. Min: {{PasswordCtrl.errors['minlength'].requiredLength}} is required.</mat-error>
+      }
+      @else if(PasswordCtrl.errors && PasswordCtrl.hasError('maxlength')) {
+      <mat-error>It's too long. Max: {{PasswordCtrl.errors['maxlength'].requiredLength}} characters.</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Confirm Password -->
+    <mat-form-field appearance="outline">
+      <mat-label>Confirm password</mat-label>
+      <input type="password" formControlName="confirmPasswordCtrl" label="Confirm Password"
+        placeHolder="Re-enter password" matInput>
+      @if (ConfirmPasswordCtrl.hasError('required')) {
+      <mat-error>This field is required.</mat-error>
+      }
+      @else if (ConfirmPasswordCtrl.errors && ConfirmPasswordCtrl.hasError('minlength')) {
+      <mat-error>It's too short. Min: {{ConfirmPasswordCtrl.errors['minlength'].requiredLength}} is
+        required.</mat-error>
+      }
+      @else if(ConfirmPasswordCtrl.errors && ConfirmPasswordCtrl.hasError('maxlength')) {
+      <mat-error>It's too long. Max: {{ConfirmPasswordCtrl.errors['maxlength'].requiredLength}} characters.</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Known As -->
+    <mat-form-field appearance="outline">
+      <mat-label>Known As</mat-label>
+      <input type="text" formControlName="knownAsCtrl" label="Known as" placeHolder="Enter your desired name." matInput>
+      @if (KnownAsCtrl.hasError('required')) {
+      <mat-error>This field is required.</mat-error>
+      }
+      @else if (KnownAsCtrl.hasError('minlength')) {
+      <mat-error>It's too short. Min: 2 characters.</mat-error>
+      }
+      @else if(KnownAsCtrl.hasError('maxlength')) {
+      <mat-error>It's too long. Max: 30 characters.</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Date of Birth -->
+    <mat-form-field>
+      <mat-label>Date of Birth</mat-label>
+      <input formControlName="dateOfBirthCtrl" [min]="minDate" [max]="maxDate" matInput [matDatepicker]="dp3"
+        placeholder="Enter your date of birth">
+      <!-- @if (DateOfBirthCtrl.invalid) { -->
+      <mat-hint>Between {{minDate.getFullYear()}} to {{maxDate.getFullYear()}}</mat-hint>
+      <!-- } -->
+      <mat-datepicker-toggle matIconSuffix [for]="dp3"></mat-datepicker-toggle>
+      <mat-datepicker #dp3 touchUi disabled="false"></mat-datepicker>
+      @if (DateOfBirthCtrl.hasError('required')) {
+      <mat-error>This field is required</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- City -->
+    <mat-form-field appearance="outline">
+      <mat-label>City</mat-label>
+      <input type="text" formControlName="cityCtrl" label="City" placeHolder="Enter your city." matInput>
+      @if (CityCtrl.hasError('required')) {
+      <mat-error>This field is required.</mat-error>
+      }
+      @else if (CityCtrl.hasError('minlength')) {
+      <mat-error>It's too short. Min: 3 characters.</mat-error>
+      }
+      @else if(CityCtrl.hasError('maxlength')) {
+      <mat-error>It's too long. Max: 30 characters.</mat-error>
+      }
+    </mat-form-field>
+    <!-- City -->
+    <mat-form-field appearance="outline">
+      <mat-label>Country</mat-label>
+      <input type="text" formControlName="countryCtrl" label="Country" placeHolder="Enter your country." matInput>
+      @if (CountryCtrl.hasError('required')) {
+      <mat-error>This field is required.</mat-error>
+      }
+      @else if (CountryCtrl.hasError('minlength')) {
+      <mat-error>It's too short. Min: 3 characters.</mat-error>
+      }
+      @else if(CountryCtrl.hasError('maxlength')) {
+      <mat-error>It's too long. Max: 30 characters.</mat-error>
+      }
+    </mat-form-field>
+
+    <button type="submit" [disabled]="registerFg.invalid" mat-raised-button color="primary">Register</button>
+
+    <!-- Other Errors -->
+    @if (passowrdsNotMatch) {
+    <p>Passwords don't match!</p>
+    }
+    <!-- Show error Email is already taken -->
+    <mat-error>{{emailExistsError}}</mat-error>
+  </div>
+
+</form>
+
+<!-- <button (click)="getState()">State</button> -->
