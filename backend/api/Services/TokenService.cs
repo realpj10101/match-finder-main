@@ -101,6 +101,6 @@ public class TokenService : ITokenService
 
         return (userId is null || !userId.HasValue)
             ? null // user id is not found
-            : userId;
+            : userId;   
     }
 }
