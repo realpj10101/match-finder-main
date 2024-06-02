@@ -29,7 +29,7 @@ public class TokenService : ITokenService
     {
         _ = _key ?? throw new ArgumentNullException("_key cannot be null", nameof(_key));
 
-        string? userIdHashed = await InsertEncryptedUserId(appUser.Id, cancellationToken);
+        string? userIdHashed = await GenerateAndStoreHashedId(appUser.Id, cancellationToken);
 
         if(string.IsNullOrEmpty(userIdHashed))
                 return null;
@@ -66,7 +66,7 @@ public class TokenService : ITokenService
 /// <param name="cancellationToken"></param>
 /// <param name="jtiValue"></param>
 /// <returns>string: identifierHash</returns>
-    private async Task<string?> InsertEncryptedUserId(ObjectId userId, CancellationToken cancellationToken, string? jtiValue = null)
+    private async Task<string?> GenerateAndStoreHashedId(ObjectId userId, CancellationToken cancellationToken, string? jtiValue = null)
     {
         string newObjectId = ObjectId.GenerateNewId().ToString();
 
@@ -83,6 +83,9 @@ public class TokenService : ITokenService
 
         return null;
     }
+
+
+
 
     // /// <summary>
     // /// Get a hashed ObjecdId of the token and return the user's actual ObjectId from DB or null if conversion failes.
